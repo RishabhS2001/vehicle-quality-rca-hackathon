@@ -1,0 +1,7 @@
+ERROR_ID,ERROR_CODE,DESCRIPTION
+1,P1794,Battery Voltage Circuit Malfunction
+2,B1317,Battery Voltage High
+3,B1318,Battery Voltage Low
+4,B1671,Battery Module Voltage Out Of Range
+5,B1676,Battery Pack Voltage Out Of Range
+6,C2100,Battery Voltage Low - Circuit Voltage Below Threshold

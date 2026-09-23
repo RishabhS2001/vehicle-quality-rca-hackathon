@@ -1,0 +1,6 @@
+BATTERY_TYPE,ANODE,CATHODE,ELECTROLYTE
+1,Lead (Pb) 99.9%,Lead (Pb) 99.9%,Sulfuric acid (H2SO4) 28-38% Rest-H2O
+2,Nickel (Ni) 40-60% Cobalt (Co) 20-30% Others,Nickel Hydroxide (Ni(OH)2) 50-80%,Potassium Hydroxide (KOH) 25-30%
+3,Graphite 85%,Lithium Cobalt Oxide (LiCoO2) 85-95%,Lithium Hexafluorophosphate (LiPF6) 10-15%
+4,Cobalt 90-100%,Cobalt Dioxide (CoO2)  90-100%,Lithium Hexafluorophosphate (LiPF6) 1-10%
+5,Graphite 90-98%,"Cobalt 20%, Nickel 60%, and Manganese 20%",Lithium Hexafluorophosphate (LiPF6) 10-15%
