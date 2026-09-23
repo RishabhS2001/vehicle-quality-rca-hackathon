@@ -1,0 +1,127 @@
+====================================================================
+VEHICLE QUALITY RCA AGENT — CONSOLIDATED SNOWFLAKE PROMPTS
+Team The Snow Coders | Snowflake x Capgemini Hackathon 2026
+====================================================================
+
+This file lists, in order, every natural-language prompt given to
+Snowflake's Cortex Agent Studio (CoCo assistant) to build, configure,
+and refine the VEHICLE_QUALITY_RCA_AGENT and its semantic view.
+
+--------------------------------------------------------------------
+1. CONNECT SEMANTIC VIEW / ADD CORTEX ANALYST TOOL
+   (First step after creating the agent shell)
+--------------------------------------------------------------------
+Add a Cortex Analyst tool to this agent. Please suggest some semantic
+views I have present in my DB.SCHEMA.
+
+Result: CoCo created semantic view VEHICLE_QUALITY_SV over 5 views
+(VW_VEHICLE_QUALITY, VW_OVERALL_RISK_PROJECTION,
+VW_SUPPLIER_RISK_PROJECTION, VW_PART_RISK_PROJECTION,
+VW_BATTERY_TYPE_RISK_PROJECTION) and added a Cortex Analyst tool named
+"vehicle_quality_analyst" to the agent, pointed at that semantic view,
+using warehouse COMPUTE_WH.
+
+--------------------------------------------------------------------
+2. CONFIGURE AGENT INSTRUCTIONS (Response + Orchestration behavior)
+--------------------------------------------------------------------
+You are a Vehicle Quality Root Cause Analysis (RCA) Agent for an
+automotive OEM.
+
+Your role:
+1. Help identify root causes of vehicle battery quality issues by
+   analyzing patterns across suppliers, parts, battery chemistry
+   types, and DTC error codes.
+2. Answer questions about historical failure patterns using
+   VW_VEHICLE_QUALITY (detailed event-level data).
+3. Answer questions about 30-day failure forecasts and risk
+   projections using VW_OVERALL_RISK_PROJECTION,
+   VW_SUPPLIER_RISK_PROJECTION, VW_PART_RISK_PROJECTION, and
+   VW_BATTERY_TYPE_RISK_PROJECTION.
+4. When asked about "risk" or "forecast" or "next 30 days", always
+   reference the RISK_PROJECTION views, not raw historical counts.
+5. When identifying root causes, always try to connect the pattern
+   across multiple dimensions — for example, link a risky part to
+   its supplier and battery chemistry.
+6. Present findings clearly with specific numbers (counts,
+   percentages, projected failures) rather than vague statements.
+7. If a supplier or part has zero historical failures, explicitly
+   mention it as "low risk" or "clean track record" when relevant
+   to the question.
+8. Be concise and business-friendly — the audience includes both
+   technical engineers and business stakeholders.
+
+--------------------------------------------------------------------
+3. RUN AGENT READINESS AUDIT
+--------------------------------------------------------------------
+yes, run the audit
+
+Result: CoCo returned a semantic view quality score of 1/7 (14% —
+Low), flagging missing relationships, missing metrics, zero verified
+queries (VQRs), and shallow/no descriptions across all 61 columns.
+
+--------------------------------------------------------------------
+4. AUDIT & IMPROVE THE SEMANTIC VIEW
+--------------------------------------------------------------------
+Yes, please audit and improve the semantic view — add relationships
+between the 5 tables, define metrics, add descriptions, and suggest
+VQRs.
+
+Also add sample questions to the agent spec.
+
+Result: CoCo added 4 relationships (VW_VEHICLE_QUALITY to supplier,
+part, and battery-type projections; part to battery type), 6 metrics
+on VW_VEHICLE_QUALITY (total failures, unique vehicles, unique parts,
+unique suppliers, unique DTC codes, avg distance at failure),
+descriptions on all 61 columns + 5 tables, and 10 verified queries
+(VQRs). Semantic view quality score improved from 14% (Low) to 83%
+(Good).
+
+--------------------------------------------------------------------
+5. ADD SAMPLE QUESTIONS TO THE AGENT SPEC
+--------------------------------------------------------------------
+Yes, add these sample questions to the agent spec:
+1. Which supplier has the highest projected failures in the next
+   30 days?
+2. Which suppliers have a clean track record with zero failures?
+3. What's the root cause behind the highest-risk part?
+4. Which battery chemistry type is riskiest?
+5. Give me a fleet-wide 30-day failure forecast summary.
+
+--------------------------------------------------------------------
+6. UPDATE ORCHESTRATION FOR MULTI-CAPABILITY FRAMING
+--------------------------------------------------------------------
+Please update the agent's orchestration instructions to explicitly
+mention it has three integrated capabilities: (1) Quality Monitoring
+— detecting anomaly patterns like concentrated failures in specific
+parts/suppliers, (2) Root Cause Analysis — tracing failures across
+part, supplier, and battery chemistry dimensions, and (3) Predictive
+Maintenance — forecasting failures for the next 30 days using risk
+projections. When asked "what can you do", the agent should describe
+all three capabilities clearly.
+
+====================================================================
+VERIFICATION / TEST QUESTIONS
+(Asked in the agent Preview chat to confirm end-to-end behavior
+after each configuration step above)
+====================================================================
+
+- Which supplier has the highest projected failures in the next
+  30 days?
+- Which suppliers have a clean track record with zero historical
+  failures?
+- Give me a root cause summary: which specific part, supplier, and
+  battery chemistry combination is driving the most risk?
+- What can you do?
+
+====================================================================
+NOTES
+====================================================================
+- All prompts above were issued through Snowsight's Agent Studio
+  chat panel (CoCo assistant) while editing VEHICLE_QUALITY_RCA_AGENT
+  in VEHICLE_DB.VEHICLE_SCHEMA.
+- CoCo made the underlying SQL/YAML changes (CREATE SEMANTIC VIEW,
+  agent spec updates) automatically based on these prompts — the
+  resulting DDL is captured separately in the deployable SQL scripts
+  (sql/04_semantic_view_and_agent.sql).
+- Agent was deployed to the "default" target after granting
+  CREATE AGENT on the schema to role PUBLIC (see sql/01 setup script).
